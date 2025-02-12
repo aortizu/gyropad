@@ -10,7 +10,7 @@
 // @icon         https://icons.iconarchive.com/icons/paomedia/small-n-flat/72/gamepad-icon.png
 // @grant        none
 // @updateURL    https://raw.githubusercontent.com/aortizu/gyropad/refs/heads/main/Gyropad.js
-// @downloadURL  https://github.com/aortizu/gyropad/releases/latest/download/Gyropad.js
+// @downloadURL  https://github.com/aortizu/gyropad/releases/download/1.0.1/Gyropad.js
 // ==/UserScript==
 (function(){'use strict';const MAX_ANGLE=45;const MOVEMENT_THRESHOLD=0.03;const DEFAULT_OPACITY=0.3;const STICK_RADIUS=45;const realGamepads=navigator.getGamepads.bind(navigator);const clamp=(num,min,max)=>Math.max(min,Math.min(num,max));let enabled=!0;let horizontal=!1;let vertical=!1;let controllerEnable=!1;let showConfigController=!1;let deadzone=0.1;let alpha=0.1;let smoothedX=0;let smoothedY=0;let isRight=!0;let leftStickMoved=!1;let rightStickMoved=!1;let trigger=-1;let posX=0;let posY=0;let scale=1;let elementSelected=null;let toggleButton=null;let opacity=DEFAULT_OPACITY;let simulatedStick={x1:0.0,y1:0.0,x2:0.0,y2:0.0};let simulatedGamepad={id:"Xbox One Game Controller (STANDARD GAMEPAD)",index:0,connected:!0,mapping:"standard",buttons:Array(18).fill({pressed:!1,touched:!1,value:0}),axes:[0,0,0,0,0,0],timestamp:0.0};const createButton=(text,styles,eventListeners)=>{const button=document.createElement('button');button.textContent=text;Object.assign(button.style,styles);for(const event in eventListeners){button.addEventListener(event,eventListeners[event])}
 return button};function setTrigger(triggerValue){trigger=triggerValue;enabled=trigger<0}
