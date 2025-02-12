@@ -9,8 +9,8 @@
 // @match        https://www.xbox.com/*/play*
 // @icon         https://icons.iconarchive.com/icons/paomedia/small-n-flat/72/gamepad-icon.png
 // @grant        none
-// @updateURL    https://raw.githubusercontent.com/aortizu/gyropad/refs/heads/main/Gyropad.js
-// @downloadURL  https://github.com/aortizu/gyropad/releases/download/1.0.1/Gyropad.js
+// @downloadURL https://update.greasyfork.org/scripts/526617/Gyropad.user.js
+// @updateURL https://update.greasyfork.org/scripts/526617/Gyropad.meta.js
 // ==/UserScript==
 (function () {
     'use strict';
@@ -45,8 +45,8 @@
         index: 0,
         connected: true,
         mapping: "standard",
-        buttons: Array(18).fill({ pressed: false, touched: false, value: 0 }),
-        axes: [0, 0, 0, 0, 0, 0],
+        buttons: Array(16).fill({ pressed: false, touched: false, value: 0 }),
+        axes: [0.0, 0.0, 0.0, 0.0],
         timestamp: 0.0
     };
     const createButton = (text, styles, eventListeners) => {
@@ -71,6 +71,7 @@
             toggleButton.style.background = enabled ? "#00A86B" : "#FF4D4D";
             simulatedGamepad.buttons = gamepad.buttons.map(btn => ({ pressed: btn.pressed, value: btn.value }));
             simulatedGamepad.axes = [...gamepad.axes];
+            simulatedGamepad.timestamp = performance.now();
             const isUsingRightStick = isRight;
             const stickX = gamepad.axes[isUsingRightStick ? 2 : 0];
             const stickY = gamepad.axes[isUsingRightStick ? 3 : 1];
@@ -136,6 +137,8 @@
     } else {
         window.addEventListener("devicemotion", handleDeviceMotion);
     }
+
+    gameLoop();
 
     function createUI() {
         const screenWidth = window.innerWidth;
@@ -998,6 +1001,5 @@
         document.body.appendChild(uiContainer);
         document.body.appendChild(uiControllerContainer);
     }
-    gameLoop();
     createUI();
 })();
