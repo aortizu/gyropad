@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         Gyropad
 // @namespace    https://github.com/aortizu/gyropad
-// @version      1.0.1
+// @version      1.0.3
 // @description  Simulate a gamepad with the device's gyroscope
 // @license      MIT
 // @author       Reklaw
 // @match        https://play.geforcenow.com/*
 // @match        https://www.xbox.com/*/play*
+// @match        https://cloud.boosteroid.com/*
 // @icon         https://icons.iconarchive.com/icons/paomedia/small-n-flat/72/gamepad-icon.png
 // @grant        none
 // @downloadURL https://update.greasyfork.org/scripts/526617/Gyropad.user.js
@@ -600,6 +601,17 @@
         }, {
             click: () => {
                 showConfigController = !showConfigController;
+                positionXLabel.style.display = "none";
+                positionYLabel.style.display = "none";
+                positionXInput.style.display = "none";
+                positionYInput.style.display = "none";
+                sizeLabel.style.display = "none";
+                sizeInput.style.display = "none";
+                if (elementSelected) {
+                    elementSelected.style.border = "none";
+                    elementSelected.style.opacity = opacity;
+                    elementSelected = null;
+                }
                 uiControllerContainer.style.display = "none";
             }
         });
