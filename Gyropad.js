@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gyropad
 // @namespace    https://github.com/aortizu/gyropad
-// @version      1.0.3
+// @version      1.0.4
 // @description  Simulate a gamepad with the device's gyroscope
 // @license      MIT
 // @author       Reklaw
@@ -46,10 +46,12 @@
         index: 0,
         connected: true,
         mapping: "standard",
-        buttons: Array(16).fill({ pressed: false, touched: false, value: 0 }),
-        axes: [0.0, 0.0, 0.0, 0.0],
-        timestamp: 0.0
+        buttons: Array(17).fill({ pressed: false, touched: false, value: 0 }),
+        axes: [0,0,0,0,0,0],
+        timestamp: 0.0,
+        vibrationActuator: null
     };
+
     const createButton = (text, styles, eventListeners) => {
         const button = document.createElement('button');
         button.textContent = text;
@@ -67,6 +69,7 @@
 
     navigator.getGamepads = function () {
         const gamepads = realGamepads();
+        let gamepadList = [...gamepads];
         if (gamepads[0] && !controllerEnable) {
             const gamepad = gamepads[0];
             toggleButton.style.background = enabled ? "#00A86B" : "#FF4D4D";
@@ -84,8 +87,9 @@
             }
         } else if (controllerEnable) {
             toggleButton.style.background = enabled ? "#00A86B" : "#FF4D4D";
-            simulatedGamepad.axes = [simulatedStick.x1, simulatedStick.y1, simulatedStick.x2, simulatedStick.y2];
+            simulatedGamepad.axes = [simulatedStick.x1, simulatedStick.y1, simulatedStick.x2, simulatedStick.y2,0,0];
             simulatedGamepad.timestamp = performance.now();
+            //gamepadList[0] = simulatedGamepad;
         }
         return [simulatedGamepad];
     };
@@ -329,8 +333,18 @@
                         } else {
                             controllerEnable = !controllerEnable;
                             if (controllerEnable) {
+                                if (window.location.hostname === "cloud.boosteroid.com") {
+                                    const event = new Event("gamepadconnected");
+                                    Object.defineProperty(event, "gamepad", { value: simulatedGamepad, configurable: true });
+                                    window.dispatchEvent(event);
+                                }
                                 showControls();
                             } else {
+                                if (window.location.hostname === "cloud.boosteroid.com") {
+                                    const event = new Event("gamepaddisconnected");
+                                    Object.defineProperty(event, "gamepad", { value: simulatedGamepad, configurable: true });
+                                    window.dispatchEvent(event);
+                                }
                                 hideControls();
                             }
                         }
